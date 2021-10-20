@@ -94,3 +94,25 @@ print("V\n", v)
 print("Values\n", values)
 print("Attention\n", attention)
 
+
+
+
+
+############################################
+
+batch_size, seq_length, embed_dim = x.size()
+qkv = self.qkv_proj(x)
+
+# Separate Q, K, V from linear output
+qkv = qkv.reshape(batch_size, seq_length, self.num_heads, 3*self.head_dim)
+qkv = qkv.permute(0, 2, 1, 3) # [Batch, Head, SeqLen, Dims]
+q, k, v = qkv.chunk(3, dim=-1)
+
+# Determine value outputs
+values, attention = scaled_dot_product(q, k, v, mask=mask)
+values = values.permute(0, 2, 1, 3) # [Batch, SeqLen, Head, Dims]
+values = values.reshape(batch_size, seq_length, embed_dim)
+o = self.o_proj(values)
+
+
+
