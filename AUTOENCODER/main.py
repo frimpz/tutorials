@@ -14,16 +14,15 @@ from tensorflow.python.ops import math_ops
 
 latent_dim = 64
 class Autoencoder(Model):
-  def __init__(self, latent_dim):
+  def __init__(self, decoder_shape):
     super(Autoencoder, self).__init__()
-    self.latent_dim = latent_dim
     self.encoder = tf.keras.Sequential([
-      layers.Flatten(),
-      layers.Dense(latent_dim, activation='relu'),
+      layers.Dense(1024, activation='relu'),
+      layers.Dense(32, activation='relu')
     ])
     self.decoder = tf.keras.Sequential([
-      layers.Dense(784, activation='sigmoid'),
-      layers.Reshape((28, 28))
+      layers.Dense(1024, activation='relu'),
+      layers.Dense(decoder_shape, activation='sigmoid')
     ])
 
   def call(self, x):
@@ -53,9 +52,8 @@ autoencoder.compile(optimizer=opt, loss=cost)
 
 (x_train, _), (x_test, _) = fashion_mnist.load_data()
 
-print(type(x_train))
 
-exit()
+# exit()
 
 x_train = x_train.astype('float32') / 255.
 x_test = x_test.astype('float32') / 255.
@@ -83,25 +81,25 @@ decoded_imgs = autoencoder.decoder(encoded_imgs).numpy()
 # plt.show()
 
 
-n = 20
-plt.figure(figsize=(20, 4))
-for i in range(n):
-  # display original
-  ax = plt.subplot(2, n, i + 1)
-  plt.imshow(x_test[i])
-  plt.title("ori")
-  plt.gray()
-  ax.get_xaxis().set_visible(False)
-  ax.get_yaxis().set_visible(False)
-
-  # display reconstruction
-  ax = plt.subplot(2, n, i + 1 + n)
-  plt.imshow(decoded_imgs[i])
-  plt.title("rec")
-  plt.gray()
-  ax.get_xaxis().set_visible(False)
-  ax.get_yaxis().set_visible(False)
-plt.show()
+# n = 20
+# plt.figure(figsize=(20, 4))
+# for i in range(n):
+#   # display original
+#   ax = plt.subplot(2, n, i + 1)
+#   plt.imshow(x_test[i])
+#   plt.title("ori")
+#   plt.gray()
+#   ax.get_xaxis().set_visible(False)
+#   ax.get_yaxis().set_visible(False)
+#
+#   # display reconstruction
+#   ax = plt.subplot(2, n, i + 1 + n)
+#   plt.imshow(decoded_imgs[i])
+#   plt.title("rec")
+#   plt.gray()
+#   ax.get_xaxis().set_visible(False)
+#   ax.get_yaxis().set_visible(False)
+# plt.show()
 
 
 exit()

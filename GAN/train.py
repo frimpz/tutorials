@@ -29,16 +29,17 @@ train_loader = torch.utils.data.DataLoader(
 )
 
 real_samples, mnist_labels = next(iter(train_loader))
+
 for i in range(16):
     ax = plt.subplot(4, 4, i + 1)
     plt.imshow(real_samples[i].reshape(28, 28), cmap="gray_r")
     plt.xticks([])
     plt.yticks([])
-plt.show()
-
+# plt.show()
 
 discriminator = Discriminator().to(device=device)
 generator = Generator().to(device=device)
+
 
 lr = 0.0001
 num_epochs = 50
@@ -96,6 +97,8 @@ for epoch in range(num_epochs):
             print(f"Epoch: {epoch} Loss D.: {loss_discriminator}")
             print(f"Epoch: {epoch} Loss G.: {loss_generator}")
 
+
+exit()
 
 latent_space_samples = torch.randn(batch_size, 100).to(device=device)
 generated_samples = generator(latent_space_samples)
