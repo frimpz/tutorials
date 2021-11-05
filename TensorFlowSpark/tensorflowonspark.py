@@ -1,10 +1,6 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 
 
-
-
-
-return
 def main_fun(args, ctx):
   from tensorflow_examples.models.pix2pix import pix2pix
   import tensorflow_datasets as tfds
