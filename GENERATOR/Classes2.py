@@ -39,8 +39,6 @@ class DataGenerator(tf.keras.utils.Sequence):
             np.random.shuffle(self.indexes)
 
     def __data_generation(self, list_IDs_temp):
-        # print(list_IDs_temp)
-        # print(len(list_IDs_temp))
         'Generates data containing batch_size samples' # X : (n_samples, *dim, n_channels)
         # Initialization
         X = np.empty((self.batch_size, self.dim))
@@ -48,9 +46,8 @@ class DataGenerator(tf.keras.utils.Sequence):
 
         # Generate data
         for i, ID in enumerate(list_IDs_temp):
-            # Store sample
-            tmp = np.array(self.data.filter(self.data.person_id == ID).collect()[0])[1:-1]
-            X[i,] = tmp
+            tmp = self.data.iloc[ID].values[:-1]
+            X[i, ] = tmp
             # Store class
             y[i] = self.labels[ID]
 
