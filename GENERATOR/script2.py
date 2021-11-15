@@ -1,7 +1,6 @@
 '''
-    Code using pandas Dataframe
+    Code using Spark Dataframe
 '''
-
 from tensorflow.keras.datasets import mnist
 from pyspark import RDD, SparkContext
 import numpy as np
@@ -100,4 +99,5 @@ model.compile(
 model.fit_generator(generator=training_generator,
                     # validation_data=validation_generator,
                     # use_multiprocessing=True,
-                    workers=6, epochs=10)
+                    # workers=6,
+                    epochs=10)
