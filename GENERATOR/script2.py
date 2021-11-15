@@ -1,9 +1,3 @@
-<<<<<<< HEAD
-'''
-    Code using Spark Dataframe
-'''
-=======
->>>>>>> 9502b20d9a090235a46f185046f7e34e93cdd343
 from tensorflow.keras.datasets import mnist
 from pyspark import RDD, SparkContext
 import numpy as np
