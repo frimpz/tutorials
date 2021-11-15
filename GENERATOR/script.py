@@ -32,7 +32,15 @@ def to_spark_df(x, y):
     df = pd.DataFrame(x)
     df['label'] = y.tolist()
     df.insert(0, 'person_id', df.index)
-    df = df.head(100)
+    df = df.head(1000)
+    return df
+
+
+def add_label(x, y):
+    df = pd.DataFrame(x)
+    df['label'] = y.tolist()
+    # df.insert(0, 'person_id', df.index)
+    # df = df.set_index('person_id')
     return df
 
 spark = SparkSession.builder.getOrCreate()
@@ -71,7 +79,7 @@ labels = train.set_index('person_id').to_dict()['label']
 
 # Parameters
 params = {'dim': 784,
-          'batch_size': 1,
+          'batch_size': 50,
           'n_classes': 10,
           'shuffle': True,
           'data': train_rdd}
@@ -80,6 +88,7 @@ params = {'dim': 784,
 # Generators
 training_generator = DataGenerator(partition['train'], labels, **params)
 # validation_generator = DataGenerator(partition['validation'], labels, **params)
+
 
 model = tf.keras.Sequential([
        tf.keras.layers.Dense(128, input_dim=784, activation='relu'),
@@ -94,10 +103,8 @@ model.compile(
     optimizer='adam',
     metrics=['accuracy'])
 
-# for i in training_generator:
-#         print(i)
-#         exit()
-model.fit_generator(generator=training_generator,
+
+model.fit(x=training_generator,
                     # validation_data=validation_generator,
                     # use_multiprocessing=True,
-                    workers=6, epochs=10)
+                    workers=6, epochs=5)
