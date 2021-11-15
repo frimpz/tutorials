@@ -50,5 +50,8 @@ class DataGenerator(tf.keras.utils.Sequence):
             X[i, ] = tmp
             # Store class
             y[i] = self.labels[ID]
+        print(X.shape, type(X))
+        print(y.shape, type(y))
+        exit()
 
         return X, tf.keras.utils.to_categorical(y, num_classes=self.n_classes)

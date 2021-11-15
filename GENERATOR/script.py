@@ -28,7 +28,7 @@ def to_spark_df(x, y):
     df = pd.DataFrame(x)
     df['label'] = y.tolist()
     df.insert(0, 'person_id', df.index)
-    df = df.head(10)
+    df = df.head(1000)
     return df
 
 
@@ -75,7 +75,7 @@ labels = train.set_index('person_id').to_dict()['label']
 
 # Parameters
 params = {'dim': 784,
-          'batch_size': 1,
+          'batch_size': 50,
           'n_classes': 10,
           'shuffle': True,
           'data': train_rdd}
