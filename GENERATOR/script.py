@@ -1,3 +1,7 @@
+'''
+    Code using pandas Dataframe
+'''
+
 from tensorflow.keras.datasets import mnist
 from pyspark import RDD, SparkContext
 import numpy as np
