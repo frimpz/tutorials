@@ -2,6 +2,8 @@ from tensorflow.keras.datasets import mnist
 import numpy as np
 import tensorflow as tf
 from Classes1 import DataGenerator
+from tensorflow.keras import metrics
+import matplotlib.pyplot as plt
 
 
 (x_train, y_train), (x_test, y_test) = mnist.load_data()
@@ -40,6 +42,17 @@ val_params = {'batch_size': 100,
 training_generator = DataGenerator(**params)
 validation_generator = DataGenerator(**val_params)
 
+metrics = [
+      metrics.TruePositives(name='tp'),
+      metrics.FalsePositives(name='fp'),
+      metrics.TrueNegatives(name='tn'),
+      metrics.FalseNegatives(name='fn'),
+      metrics.BinaryAccuracy(name='accuracy'),
+      metrics.Precision(name='precision'),
+      metrics.Recall(name='recall'),
+      metrics.AUC(name='auc'),
+      metrics.AUC(name='prc', curve='PR'), # precision-recall curve
+    ]
 
 model = tf.keras.Sequential([
        tf.keras.layers.Dense(128, input_dim=784, activation='relu'),
@@ -52,8 +65,26 @@ model = tf.keras.Sequential([
 model.compile(
     loss=tf.keras.losses.CategoricalCrossentropy(),
     optimizer='adam',
-    metrics=['accuracy'])
+    metrics=metrics)
 
 
-model.fit(x=training_generator, validation_data=validation_generator,
-            verbose=1, use_multiprocessing=True, workers=6, epochs=20)
+history = model.fit(x=training_generator, validation_data=validation_generator,
+            verbose=1, use_multiprocessing=True, workers=6, epochs=2)
+
+
+
+
+def plot_metrics(history):
+    mets = ['loss', 'accuracy', 'precision', 'recall', 'auc', 'prc']
+    fig, ax = plt.subplots(3, 2, constrained_layout=True, figsize=(18, 12))
+    for i, j in enumerate(mets):
+        row = int(i/2)
+        col = i%2
+
+        ax[row][col].plot(history.history[j], label="Training "+ j)
+        ax[row][col].plot(history.history["val_"+j], label="Validation "+j)
+        ax[row][col].set(ylabel=j, xlabel='epoch', title=j)
+        ax[row][col].legend(['train', 'val'], loc='upper left')
+    plt.show()
+
+plot_metrics(history)
